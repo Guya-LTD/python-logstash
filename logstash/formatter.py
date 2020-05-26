@@ -23,12 +23,19 @@ class LogstashFormatterBase(logging.Formatter):
     def get_extra_fields(self, record):
         # The list contains all the attributes listed in
         # http://docs.python.org/library/logging.html#logrecord-attributes
+        #skip_list = (
+        #    'args', 'asctime', 'created', 'exc_info', 'exc_text', 'filename',
+        #    'funcName', 'id', 'levelname', 'levelno', 'lineno', 'module',
+        #    'msecs', 'msecs', 'message', 'msg', 'name', 'pathname', 'process',
+        #    'processName', 'relativeCreated', 'thread', 'threadName', 'extra',
+        #    'auth_token', 'password', 'stack_info')
+
         skip_list = (
-            'args', 'asctime', 'created', 'exc_info', 'exc_text', 'filename',
-            'funcName', 'id', 'levelname', 'levelno', 'lineno', 'module',
+            'args', 'asctime', 'created', 'exc_info', 'exc_text',
+            'id', 'levelname',
             'msecs', 'msecs', 'message', 'msg', 'name', 'pathname', 'process',
-            'processName', 'relativeCreated', 'thread', 'threadName', 'extra',
-            'auth_token', 'password', 'stack_info')
+            'processName', 'relativeCreated',
+            'password')
 
         if sys.version_info < (3, 0):
             easy_types = (basestring, bool, dict, float, int, long, list, type(None))
@@ -122,7 +129,7 @@ class LogstashFormatterVersion1(LogstashFormatterBase):
             '@timestamp': self.format_timestamp(record.created),
             '@version': '1',
             'message': record.getMessage(),
-            'host': self.host,
+            'host_id': self.host,
             'path': record.pathname,
             'tags': self.tags,
             'type': self.message_type,
